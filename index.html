@@ -85,7 +85,7 @@
             position: absolute;
             width: 100px;
             height: 160px;
-            animation: launch 4s infinite cubic-bezier(0.47, 0, 0.745, 0.715);
+            animation: launch 4s forwards cubic-bezier(0.47, 0, 0.745, 0.715);
             filter: drop-shadow(0 0 20px rgba(255, 150, 0, 0.8));
         }
 
@@ -681,8 +681,9 @@
             const endX = startX + (Math.random() * 30 - 15);
             rocket.style.setProperty('--start-x', startX + '%');
             rocket.style.setProperty('--end-x', endX + '%');
-            rocket.style.animationDelay = Math.random() * 1 + 's';
-            rocket.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            
+            const duration = (Math.random() * 2 + 3) * 1000; // Convert to milliseconds
+            rocket.style.animationDuration = (duration / 1000) + 's';
             
             rocket.innerHTML = `
                 <div class="rocket-body">
@@ -714,11 +715,13 @@
             totalLaunches++;
             document.getElementById('totalLaunches').textContent = totalLaunches;
             
-            // Remove rocket after animation
+            // Remove rocket after animation completes
             setTimeout(() => {
                 clearInterval(trailInterval);
-                rocket.remove();
-            }, 5000);
+                if (rocket.parentNode) {
+                    rocket.remove();
+                }
+            }, duration);
         }
 
         // Launch rocket on button click
